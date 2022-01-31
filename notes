@@ -1,0 +1,14 @@
+aws s3 mb s3://bucket-name
+aws s3 rb s3://bucket-name
+aws s3 mv s3://bucket-name/example s3://my-bucket/
+aws s3 cp s3://bucket-name/example s3://my-bucket/
+
+aws s3 ls s3://bucket-name
+aws s3 rm s3://bucket-name --recursive
+aws s3 rm s3://bucket-name/example/filename.txt --recursive
+aws s3 mv filename.txt s3://bucket-name
+aws s3 cp filename.txt s3://bucket-name
+aws s3 sync . s3://my-bucket/path --acl public-read  #  private, public-read, and public-read-write
+echo "hello world" | aws s3 cp - s3://bucket-name/filename.txt
+aws s3 cp . s3://my-bucket/path --include "*.txt"
+aws s3 cp . s3://my-bucket/path --include "*.txt" --exclude "MyFile*.txt"
