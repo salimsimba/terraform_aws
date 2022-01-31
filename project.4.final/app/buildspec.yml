@@ -1,0 +1,26 @@
+version: 0.1
+run-as: root
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo running unit test
+      - docker run --rm -w /app -v ${PWD}:/app python:3.10 /bin/bash -c "pip3 install -r requirements.txt ; python3 -m unittest test_app.py"
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $IMAGE_NAME .
+      - docker tag $IMAGE_NAME $REPOSITORY_URI
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URI
+      - echo Writing image definitions file...
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
