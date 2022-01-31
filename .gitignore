@@ -1,0 +1,7 @@
+.terraform.lock.hcl
+.terraform/
+__pycache__
+lambda_zip/
+myec2key.pem
+terraform.tfstate
+terraform.tfstate.backup
